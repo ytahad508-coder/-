@@ -18,28 +18,26 @@ from telegram.ext import (
 #                  BOT SETTINGS
 # =========================================================
 
-# BotFather token Render-এর Environment Variable থেকে আসবে
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+# BotFather token
+BOT_TOKEN = os.getenv("BOT_TOKEN", "8995611230:AAGdytj6ah2hTqRHa99KEt2C2AWTnUtpMNY")
 
-# তোমার Telegram Channel username
-# উদাহরণ: @yourchannel
-CHANNEL_USERNAME = "@YOUR_CHANNEL"
+# Telegram Channel ID or Username for verification (e.g., "@x9_penel_nj")
+CHANNEL_USERNAME = "@x9_penel_nj"
 
 # Channel link
-CHANNEL_LINK = "https://t.me/YOUR_CHANNEL"
+CHANNEL_LINK = "https://t.me/x9_penel_nj"
 
-# Admin Telegram ID
-# পরে নিজের Telegram ID বসাবে
-ADMIN_ID = 123456789
+# Admin Telegram ID (আপনার Telegram ID এখানে বসাবেন)
+ADMIN_ID = 123456789 
 
 # Admin contact username
-ADMIN_USERNAME = "@YOUR_ADMIN"
+ADMIN_USERNAME = "@Nr_nihals"
 
 # Update Group link
-UPDATE_GROUP_LINK = "https://t.me/YOUR_GROUP"
+UPDATE_GROUP_LINK = "https://t.me/x9_penel_nj"
 
 # Setup Video link
-SETUP_VIDEO_LINK = "https://t.me/YOUR_VIDEO"
+SETUP_VIDEO_LINK = "https://t.me/x9_penel_nj"
 
 
 # =========================================================
@@ -55,16 +53,6 @@ PAYMENT_ACCOUNT_TYPE = "Personal"
 # =========================================================
 #                  PANEL INFORMATION
 # =========================================================
-#
-# এখানে পরে শুধু photo, price এবং details বসাবে।
-#
-# photo = Telegram-এর photo file_id
-# price = Panel-এর দাম
-# details = Panel সম্পর্কে বিস্তারিত
-#
-# এখন photo ফাঁকা রাখা হয়েছে।
-# পরে bot-এ photo পাঠিয়ে file_id নিয়ে এখানে বসাতে পারবে.
-#
 
 PANELS = {
     1: {
@@ -73,63 +61,54 @@ PANELS = {
         "price": "PRICE HERE",
         "details": "PANEL 1 DETAILS HERE",
     },
-
     2: {
         "name": "Panel 2",
         "photo": "",
         "price": "PRICE HERE",
         "details": "PANEL 2 DETAILS HERE",
     },
-
     3: {
         "name": "Panel 3",
         "photo": "",
         "price": "PRICE HERE",
         "details": "PANEL 3 DETAILS HERE",
     },
-
     4: {
         "name": "Panel 4",
         "photo": "",
         "price": "PRICE HERE",
         "details": "PANEL 4 DETAILS HERE",
     },
-
     5: {
         "name": "Panel 5",
         "photo": "",
         "price": "PRICE HERE",
         "details": "PANEL 5 DETAILS HERE",
     },
-
     6: {
         "name": "Panel 6",
         "photo": "",
         "price": "PRICE HERE",
         "details": "PANEL 6 DETAILS HERE",
     },
-
     7: {
         "name": "Panel 7",
         "photo": "",
         "price": "PRICE HERE",
         "details": "PANEL 7 DETAILS HERE",
     },
-
     8: {
         "name": "Panel 8",
         "photo": "",
         "price": "PRICE HERE",
         "details": "PANEL 8 DETAILS HERE",
     },
-
     9: {
         "name": "Panel 9",
         "photo": "",
         "price": "PRICE HERE",
         "details": "PANEL 9 DETAILS HERE",
     },
-
     10: {
         "name": "Panel 10",
         "photo": "",
@@ -156,7 +135,6 @@ logger = logging.getLogger(__name__)
 # =========================================================
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     user = update.effective_user
 
     welcome_text = f"""
@@ -195,31 +173,25 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # =========================================================
 
 async def verify_join(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     query = update.callback_query
     await query.answer()
 
     user_id = query.from_user.id
 
     try:
-
         member = await context.bot.get_chat_member(
             chat_id=CHANNEL_USERNAME,
             user_id=user_id
         )
 
         if member.status in ["member", "administrator", "creator"]:
-
             await query.edit_message_text(
                 "✅ Verification Successful!\n\n"
                 "🎉 আপনি আমাদের Channel-এ Join করেছেন।\n"
                 "এখন নিচের Menu থেকে আপনার প্রয়োজনীয় option নির্বাচন করুন।"
             )
-
             await show_main_menu(query)
-
         else:
-
             keyboard = [
                 [
                     InlineKeyboardButton(
@@ -242,9 +214,7 @@ async def verify_join(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
 
     except Exception as e:
-
         logger.error(e)
-
         await query.edit_message_text(
             "⚠️ Verification করা যাচ্ছে না।\n\n"
             "Bot-কে Channel-এর Admin করে আবার চেষ্টা করুন।"
@@ -256,7 +226,6 @@ async def verify_join(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # =========================================================
 
 async def show_main_menu(query):
-
     keyboard = [
         [
             InlineKeyboardButton(
@@ -292,14 +261,12 @@ async def show_main_menu(query):
 # =========================================================
 
 async def buy_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     query = update.callback_query
     await query.answer()
 
     keyboard = []
 
     for panel_id, panel in PANELS.items():
-
         keyboard.append(
             [
                 InlineKeyboardButton(
@@ -330,18 +297,14 @@ async def buy_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # =========================================================
 
 async def show_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     query = update.callback_query
     await query.answer()
 
     panel_id = int(query.data.split("_")[1])
-
     panel = PANELS.get(panel_id)
 
     if not panel:
-        await query.message.reply_text(
-            "❌ Panel পাওয়া যায়নি।"
-        )
+        await query.message.reply_text("❌ Panel পাওয়া যায়নি।")
         return
 
     text = f"""
@@ -368,26 +331,19 @@ async def show_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ],
     ]
 
-    # যদি photo দেওয়া থাকে
     if panel["photo"]:
-
         try:
-
             await query.message.reply_photo(
                 photo=panel["photo"],
                 caption=text,
                 reply_markup=InlineKeyboardMarkup(keyboard)
             )
-
         except Exception:
-
             await query.message.reply_text(
                 text,
                 reply_markup=InlineKeyboardMarkup(keyboard)
             )
-
     else:
-
         await query.message.reply_text(
             text,
             reply_markup=InlineKeyboardMarkup(keyboard)
@@ -399,13 +355,10 @@ async def show_panel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # =========================================================
 
 async def buy_now(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     query = update.callback_query
     await query.answer()
 
     panel_id = int(query.data.split("_")[1])
-
-    # User-এর selected panel memory-তে রাখছি
     context.user_data["selected_panel"] = panel_id
 
     keyboard = [
@@ -440,15 +393,10 @@ async def buy_now(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # =========================================================
 
 async def payment_bkash(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     query = update.callback_query
     await query.answer()
 
-    await show_payment(
-        query,
-        "bKash",
-        BKASH_NUMBER
-    )
+    await show_payment(query, "bKash", BKASH_NUMBER)
 
 
 # =========================================================
@@ -456,15 +404,10 @@ async def payment_bkash(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # =========================================================
 
 async def payment_nagad(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     query = update.callback_query
     await query.answer()
 
-    await show_payment(
-        query,
-        "Nagad",
-        NAGAD_NUMBER
-    )
+    await show_payment(query, "Nagad", NAGAD_NUMBER)
 
 
 # =========================================================
@@ -472,7 +415,6 @@ async def payment_nagad(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # =========================================================
 
 async def show_payment(query, method, number):
-
     keyboard = [
         [
             InlineKeyboardButton(
@@ -513,7 +455,6 @@ Payment করার পর নিচের
 # =========================================================
 
 async def ask_trxid(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     query = update.callback_query
     await query.answer()
 
@@ -532,18 +473,12 @@ async def ask_trxid(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # =========================================================
 
 async def receive_trxid(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     if not context.user_data.get("waiting_trxid"):
         return
 
     trxid = update.message.text.strip()
-
     user = update.effective_user
-
-    panel_id = context.user_data.get(
-        "selected_panel",
-        "Unknown"
-    )
+    panel_id = context.user_data.get("selected_panel", "Unknown")
 
     admin_message = f"""
 🔔 NEW PAYMENT REQUEST
@@ -559,7 +494,6 @@ async def receive_trxid(update: Update, context: ContextTypes.DEFAULT_TYPE):
 """
 
     try:
-
         await context.bot.send_message(
             chat_id=ADMIN_ID,
             text=admin_message
@@ -574,9 +508,7 @@ async def receive_trxid(update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data["waiting_trxid"] = False
 
     except Exception as e:
-
         logger.error(e)
-
         await update.message.reply_text(
             "⚠️ TrxID পাঠানো যাচ্ছে না।\n"
             "কিছুক্ষণ পর আবার চেষ্টা করুন।"
@@ -588,7 +520,6 @@ async def receive_trxid(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # =========================================================
 
 async def admin_contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     query = update.callback_query
     await query.answer()
 
@@ -619,7 +550,6 @@ async def admin_contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # =========================================================
 
 async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     query = update.callback_query
     await query.answer()
 
@@ -631,35 +561,25 @@ async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # =========================================================
 
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-
     query = update.callback_query
-
     data = query.data
 
     if data == "verify_join":
         await verify_join(update, context)
-
     elif data == "buy_panel":
         await buy_panel(update, context)
-
     elif data.startswith("panel_"):
         await show_panel(update, context)
-
     elif data.startswith("buy_"):
         await buy_now(update, context)
-
     elif data == "payment_bkash":
         await payment_bkash(update, context)
-
     elif data == "payment_nagad":
         await payment_nagad(update, context)
-
     elif data == "send_trxid":
         await ask_trxid(update, context)
-
     elif data == "admin_contact":
         await admin_contact(update, context)
-
     elif data == "main_menu":
         await main_menu(update, context)
 
@@ -669,11 +589,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # =========================================================
 
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE):
-
-    logger.error(
-        "Exception while handling an update:",
-        exc_info=context.error
-    )
+    logger.error("Exception while handling an update:", exc_info=context.error)
 
 
 # =========================================================
@@ -681,40 +597,25 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE):
 # =========================================================
 
 def main():
-
     if not BOT_TOKEN:
         print("ERROR: BOT_TOKEN environment variable is missing.")
         return
 
-    application = (
-        Application.builder()
-        .token(BOT_TOKEN)
-        .build()
-    )
+    application = Application.builder().token(BOT_TOKEN).build()
 
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CallbackQueryHandler(button_handler))
     application.add_handler(
-        CommandHandler("start", start)
-    )
-
-    application.add_handler(
-        CallbackQueryHandler(button_handler)
-    )
-
-    application.add_handler(
-        MessageHandler(
-            filters.TEXT & ~filters.COMMAND,
-            receive_trxid
-        )
+        MessageHandler(filters.TEXT & ~filters.COMMAND, receive_trxid)
     )
 
     application.add_error_handler(error_handler)
 
     print("🤖 Bot is running...")
 
-    application.run_polling(
-        allowed_updates=Update.ALL_TYPES
-    )
+    application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
 if __name__ == "__main__":
     main()
+
